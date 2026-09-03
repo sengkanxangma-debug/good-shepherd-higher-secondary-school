@@ -1,813 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Good Shepherd H.S. School Portal</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; display: flex; flex-direction: column; min-height: 95vh; }
-        .container { max-width: 1200px; margin: auto; width: 100%; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); flex-grow: 1; }
-        .hidden { display: none !important; }
-        .nav-bar { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 12px; flex-wrap: wrap; }
-        button { padding: 10px 16px; cursor: pointer; background-color: #0056b3; color: white; border: none; border-radius: 4px; font-weight: bold; }
-        button:hover { background-color: #004494; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-        input, select { padding: 9px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        input[readonly] { background-color: #e9ecef; color: #495057; }
-        .status-msg { margin-top: 10px; font-weight: bold; display: inline-block; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
-        .stat-card { background: #f8f9fa; padding: 20px; border-radius: 6px; text-align: center; border-left: 5px solid #0056b3; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stat-card h4 { margin: 0 0 10px 0; color: #555; text-transform: uppercase; font-size: 13px; }
-        .stat-card .count { font-size: 30px; font-weight: bold; color: #111; }
-        
-        .panel { background: #ffffff; border: 1px solid #e0e0e0; padding: 20px; border-radius: 6px; margin-top: 20px; }
-        .balance-box { background-color: #fff5f5; border: 2px solid #dc3545; color: #dc3545; font-size: 20px; font-weight: bold; padding: 12px; border-radius: 4px; text-align: center; margin-top: 5px; }
-        .meta-display-box { background: #eef1f6; border: 1px dashed #4a69bd; padding: 12px; border-radius: 4px; font-weight: bold; color: #2c3e50; min-height: 20px; font-size: 13px; }
-        
-        .audit-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        .audit-table th, .audit-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .audit-table th { background-color: #f1f3f5; font-weight: bold; }
-        .editable-cell { background-color: #ffffcc; font-weight: bold; border: 1px solid #e1b12c; text-align: right; width: 90px; }
-        
-        .welcome-title { font-size: 22px; font-weight: bold; margin: 15px 0; color: #222; }
-        .welcome-role { color: #0056b3; text-transform: capitalize; }
-        footer { text-align: center; margin-top: 40px; font-size: 12px; color: #777; border-top: 1px solid #e0e0e0; padding-top: 15px; }
-        .fee-flow-group { display: flex; gap: 8px; align-items: center; }
-        
-        @media print {
-            body { background: white; color: black; padding: 0; }
-            .nav-bar, button, #audit-controls, .no-print { display: none !important; }
-            .container { box-shadow: none; padding: 0; margin: 0; border: none; }
-            .audit-table { font-size: 12px; width: 100%; }
-            .editable-cell { background: transparent !important; border: none !important; text-align: left; }
-            .print-header-view { display: block !important; text-align: center; margin-bottom: 20px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Club Registration</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      margin: 0;
+      padding: 40px 20px 80px 20px; 
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Top Left Exit Button */
+    .top-exit-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #c53030;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .top-exit-btn:hover {
+      background-color: #9b2c2c;
+    }
+
+    /* Animated, Blurred Background Image */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -5%;
+      left: -5%;
+      width: 110%;
+      height: 110%;
+      background-image: url('145545.jfif'); 
+      background-size: cover;
+      background-position: center;
+      filter: blur(6px); 
+      z-index: -1;
+      animation: ambientZoom 20s infinite alternate ease-in-out; 
+    }
+
+    @keyframes ambientZoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
+    }
+
+    /* Semi-transparent Glass Container */
+    .document-container {
+      background: rgba(255, 255, 255, 0.90); 
+      backdrop-filter: blur(4px); 
+      width: 100%;
+      max-width: 700px;
+      padding: 50px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+      border-top: 8px solid #1a365d; 
+      border-radius: 4px;
+      height: fit-content;
+      margin-top: 20px; /* Added slight margin to clear the top button */
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #1a365d;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #1a365d;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .header h2 {
+      margin: 5px 0 0 0;
+      color: #4a5568;
+      font-size: 16px;
+      font-weight: normal;
+    }
+    .form-instructions {
+      font-style: italic;
+      color: #4a5568;
+      margin-bottom: 25px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      display: none; 
+    }
+    .form-group.active {
+      display: block;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      box-sizing: border-box;
+      background-color: #f8fafc;
+    }
+    select:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #1a365d;
+      background-color: white;
+    }
+
+    /* Button Group Styles */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      display: none; 
+    }
+    .submit-btn {
+      flex: 2;
+      padding: 15px;
+      background-color: #1a365d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .submit-btn:hover {
+      background-color: #2a4365;
+    }
+    .submit-btn:disabled {
+      background-color: #a0aec0;
+      cursor: not-allowed;
+    }
+    .exit-btn {
+      flex: 1;
+      padding: 15px;
+      background-color: #c53030;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .exit-btn:hover {
+      background-color: #9b2c2c;
+    }
+
+    /* Status Message Boxes */
+    #status-message {
+      text-align: center;
+      margin-top: 25px;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+      padding: 25px;
+      display: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .status-icon {
+      font-size: 45px;
+      display: block;
+      margin-bottom: 15px;
+    }
+    .success { 
+      color: #22543d; 
+      background-color: #f0fff4; 
+      border: 3px solid #48bb78; 
+    }
+    .error { 
+      color: #742a2a; 
+      background-color: #fff5f5; 
+      border: 3px solid #f56565; 
+    }
+
+    /* Official Copyright Footer */
+    .school-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(26, 54, 93, 0.85); 
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      z-index: 100;
+    }
+  </style>
 </head>
 <body>
 
-<div class="print-header-view" style="display: none; text-align: center; border-bottom: 3px double #000; padding-bottom: 10px;">
-    <h2 style="margin: 0; font-size: 24px;">GOOD SHEPHERD HIGHER SECONDARY SCHOOL</h2>
-    <h4 style="margin: 5px 0 0 0; font-weight: normal; text-transform: uppercase; letter-spacing: 1px;">Audit Record of Year 2026-2027</h4>
+<!-- Top Left Exit Button -->
+<a href="staff.html" class="top-exit-btn">⬅ Exit to Staff</a>
+
+<div class="document-container">
+  <div class="header">
+    <h1>Good Shepherd Higher Secondary School</h1>
+    <h2>Official Co-Curricular Club & Committee Registration Form</h2>
+  </div>
+
+  <p class="form-instructions" id="instructions">
+    Instructions: Please select the relevant club/committee below. Complete all required fields sequentially to officially register the leadership team for the academic year.<br><br>
+    <em>Note: Chess & Music are grouped under <strong>Sports Club</strong>. Art Club is considered <strong>Fine Arts</strong>. Decoration & Media are grouped under <strong>Cultural Club</strong>. Please select <strong>Eco Club</strong> for the environmental committee.</em>
+  </p>
+
+  <form id="registrationForm">
+    
+    <div class="form-group active" id="step-club">
+      <label for="clubType">1. Select Club/Committee Designation:</label>
+      <select id="clubType" name="clubType" required onchange="onClubChange()">
+        <option value="" disabled selected>-- Select Designation --</option>
+        <option value="Sports Club">Sports Club (Chess & Music)</option>
+        <option value="Fine Arts">Fine Arts (Art)</option>
+        <option value="Cultural Club">Cultural Club (Decoration & Media)</option>
+        <option value="Eco Club">Eco Club</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="step-coordinator">
+      <label id="label-coordinator" for="coordinatorName">2. Teacher Coordinator Name:</label>
+      <input type="text" id="coordinatorName" name="coordinatorName" required oninput="checkFields()">
+    </div>
+
+    <div class="form-group" id="step-captain">
+      <label id="label-captain" for="captainName">3. Captain Name:</label>
+      <input type="text" id="captainName" name="captainName" required oninput="checkFields()">
+    </div>
+
+    <div class="form-group" id="step-vicecaptain">
+      <label id="label-vicecaptain" for="viceCaptainName">4. Vice Captain Name:</label>
+      <input type="text" id="viceCaptainName" name="viceCaptainName" required oninput="checkFields()">
+    </div>
+
+    <div class="button-group" id="btnGroup">
+      <button type="submit" id="submitBtn" class="submit-btn">Submit Official Record</button>
+      <button type="button" class="exit-btn" onclick="exitForm()">Reset</button>
+    </div>
+  </form>
+  
+  <div id="status-message"></div>
 </div>
 
-<div class="container" id="login-section">
-    <h2>Good Shepherd School Portal Secure Sign-In</h2>
-    <input type="text" id="username" placeholder="User ID" style="margin-bottom: 12px; max-width: 320px; display: block;">
-    <input type="password" id="password" placeholder="Password" style="margin-bottom: 12px; max-width: 320px; display: block;">
-    <button id="login-btn" onclick="attemptLogin()">Authorize Profile</button>
-    <p id="login-msg" class="status-msg" style="color:red;"></p>
+<!-- Copyright Footer -->
+<div class="school-footer">
+  © 2026 GOOD SHEPHERD HIGHER SECONDARY SCHOOL - All Rights Reserved.
 </div>
-
-<div class="container hidden" id="dashboard-section">
-    <div class="nav-bar">
-        <button onclick="showTab('dashboard-home')">Dashboard</button>
-        <button onclick="showTab('admission-register')" id="nav-admission">Admission Register</button>
-        <button onclick="showTab('student-data')" id="nav-studentdata">Student Data</button>
-        <button onclick="showTab('assessment-module')" id="nav-assessments">Assessments & Results</button>
-        <button onclick="showTab('fees-module')" id="nav-fees" style="background-color: #28a745;">Fees Desk</button>
-        <button onclick="showTab('audit-module')" id="nav-audit" style="background-color: #6f42c1;">Financial Audit System</button>
-        <button style="background-color: #dc3545; margin-left: auto;" onclick="logout()">Logout</button>
-    </div>
-
-    <!-- Dashboard Home -->
-    <div id="dashboard-home" class="tab-content">
-        <div class="welcome-title">Welcome, <span id="user-role-display" class="welcome-role"></span></div>
-        <p style="color: #666; margin: 0;">Live administrative status metrics:</p>
-        <div class="stats-grid">
-            <div class="stat-card"><h4>Total Teachers</h4><div class="count" id="dash-teachers">0</div></div>
-            <div class="stat-card" style="border-left-color: #28a745;"><h4>Total Students</h4><div class="count" id="dash-students">0</div></div>
-            <div class="stat-card" style="border-left-color: #ffc107;"><h4>Admissions</h4><div class="count" id="dash-admissions">0</div></div>
-            <div class="stat-card" style="border-left-color: #17a2b8;"><h4>Notices Issued</h4><div class="count" id="dash-notices">0</div></div>
-        </div>
-        <div class="panel" style="border-left: 5px solid #17a2b8;">
-            <h3 style="margin-top: 0;">Notice Board</h3>
-            <div class="stats-grid" id="notices-feed-container">
-                <p style="color: #666; font-style: italic;">Syncing structural notification items...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admission Register Tab -->
-    <div id="admission-register" class="tab-content hidden">
-        <h3>Admission Register Enrolment Terminal</h3>
-        <p id="admin-notice" style="color:red; font-weight:bold;"></p>
-        <form id="admissionForm" class="form-grid" onsubmit="handleAdmissionSubmit(event)">
-            <div><label>Student Full Name *</label><input type="text" name="studentName" required></div>
-            <div><label>Class/Section *</label><input type="text" name="classSec" required></div>
-            <div><label>Roll Number</label><input type="number" name="rollNo"></div>
-            <div><label>Gender Profile</label><select name="gender"><option>Male</option><option>Female</option></select></div>
-            <div><label>Date of Birth</label><input type="date" name="dob"></div>
-            <div><label>Mother's Name</label><input type="text" name="motherName"></div>
-            <div><label>Father's Name</label><input type="text" name="fatherName"></div>
-            <div><label>AADHAAR Card Document ID</label><input type="text" name="aadhaarNo" disabled placeholder="Redacted automatically"></div>
-            <div><label>Name as configured in AADHAAR</label><input type="text" name="aadhaarName"></div>
-            <div><label>Permanent Residential Address</label><input type="text" name="address"></div>
-            <div><label>Area Pincode</label><input type="text" name="pincode"></div>
-            <div><label>Mobile Number Contact</label><input type="tel" name="mobile"></div>
-            <div><label>Mother Tongue</label><input type="text" name="motherTongue"></div>
-            <div><label>Social Demography Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-            <div><label>Minority Group Classification</label><input type="text" name="minority"></div>
-            <div><label>If Christian Denom.</label><input type="text" name="christianDenom"></div>
-            <div><label>Blood Group Type</label><input type="text" name="bloodGroup"></div>
-            <div><label>Unique Enrolment ID Number *</label><input type="text" name="admissionNo" required></div>
-            <div><label>Admission Date Entry</label><input type="date" name="admissionDate"></div>
-            <div><label>Admission Registration Fee Amount Paid (Rs.)</label><input type="number" name="admFeePaid" value="0" min="0"></div>
-            <div style="grid-column: span 2; margin-top:10px;"><button type="submit" id="admission-submit-btn">Commit Permanent Admission Registration Record</button><span id="admission-form-msg" class="status-msg"></span></div>
-        </form>
-    </div>
-
-    <!-- Student Data Tab -->
-    <div id="student-data" class="tab-content hidden">
-        <h3>Student Data Management (Current Active Session Profiles)</h3>
-        <p id="student-notice" style="color: green; font-weight: bold;"></p>
-        <form id="studentDataForm" class="form-grid" onsubmit="handleStudentDataSubmit(event)">
-            <div><label>Student's Name *</label><input type="text" name="sName" required></div>
-            <div><label>Class/Section Designation *</label><input type="text" name="sClassSec" required></div>
-            <div><label>Current Assigned Roll No *</label><input type="number" name="sRollNo" required></div>
-            <div><label>Gender</label><select name="sGender"><option>Male</option><option>Female</option></select></div>
-            <div><label>Date of Birth</label><input type="date" name="sDob"></div>
-            <div><label>Mother's Name</label><input type="text" name="sMotherName"></div>
-            <div><label>Father's Name</label><input type="text" name="sFatherName"></div>
-            <div><label>AADHAAR String ID</label><input type="text" name="sAadhaarNo" disabled placeholder="Redacted automatically"></div>
-            <div><label>Name as on AADHAAR</label><input type="text" name="sAadhaarName"></div>
-            <div><label>Address Info</label><input type="text" name="sAddress"></div>
-            <div><label>Pincode</label><input type="text" name="sPincode"></div>
-            <div><label>Primary Mobile Number</label><input type="tel" name="sMobile"></div>
-            <div><label>Mother Tongue</label><input type="text" name="sMotherTongue"></div>
-            <div><label>Social Category</label><select name="sCategory"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-            <div><label>Minority Identity Group</label><input type="text" name="sMinority"></div>
-            <div><label>If Christian Denom.</label><input type="text" name="sChristianDenom"></div>
-            <div><label>Blood Group</label><input type="text" name="sBloodGroup"></div>
-            <div><label>Admission ID Map Reference *</label><input type="text" name="sCurAdmissionNo" required></div>
-            <div><label>Session Registration Date</label><input type="date" name="sAdmissionDate"></div>
-            <div style="grid-column: span 2; margin-top:10px;"><button type="submit" id="student-submit-btn">Save Active Session Profile</button><span id="student-form-msg" class="status-msg"></span></div>
-        </form>
-    </div>
-
-    <!-- Assessments Tab -->
-    <div id="assessment-module" class="tab-content hidden">
-        <h3>Assessments & Results Portal Console</h3>
-        <div class="stats-grid">
-            <div class="stat-card" style="border-left-color: #28a745; text-align: left;">
-                <h4 style="color: #28a745;">1. Cumulative Marks Entry</h4>
-                <a id="btn-marks-link" href="H404" target="_blank" style="display: inline-block; background-color: #28a745; color: white; padding: 10px 18px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 13px;">Open Live Academic Matrix Spreadsheet ↗</a>
-            </div>
-            <div class="stat-card" style="border-left-color: #0056b3; text-align: left;">
-                <h4 style="color: #0056b3;">2. Report Engine & Grading Summaries</h4>
-                <a id="btn-results-link" href="H404" target="_blank" style="display: inline-block; background-color: #0056b3; color: white; padding: 10px 18px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 13px;">View Compiled Result Sheets ↗</a>
-            </div>
-        </div>
-        <div class="panel hidden" id="admin-notice-panel" style="border-left: 5px solid #dc3545; margin-top: 25px;">
-            <h4 style="margin-top:0; color:#dc3545;">Publish Clickable Document to Notice Cards</h4>
-            <div style="display: flex; flex-direction: column; gap: 11px; max-width: 600px;">
-                <input type="text" id="notice-title" placeholder="Notice short heading">
-                <input type="url" id="notice-url" placeholder="Resource access link string (https://...)">
-                <button style="background-color:#dc3545; width: fit-content;" onclick="submitNewNotice()">Broadcast Announcement Notice</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fees Desk Module Workspace -->
-    <div id="fees-module" class="tab-content hidden">
-        <h3 style="color:#28a745;">Accountant Desk: Tuition Fees & Billing Matrix Console (2026-2027)</h3>
-        <p id="fees-restriction-msg" style="color:red; font-weight:bold;"></p>
-        
-        <div id="fees-active-container">
-            <div class="panel" style="border-top: 4px solid #28a745; margin-top:5px;">
-                <h4>Search Student Enrollment Workspace Profile</h4>
-                <div style="display:flex; gap: 12px; max-width: 520px; margin-bottom: 15px;">
-                    <input type="text" id="fee-search-id" placeholder="Enter Registration/Admission Number">
-                    <button type="button" onclick="lookupStudentFees()" style="background-color: #28a745;">Pull Profile Ledger</button>
-                </div>
-                <p id="fee-search-status" style="font-weight:bold; font-size:14px; margin: 5px 0;"></p>
-                
-                <form id="feesForm" class="form-grid" onsubmit="handleFeesSubmit(event)">
-                    <div><label>Student's Registered Full Name</label><input type="text" id="fName" name="fName" readonly></div>
-                    <div><label>Assigned Class Group / Section</label><input type="text" id="fClassSec" name="fClassSec" readonly></div>
-                    <div><label>Current Assigned Roll Number</label><input type="text" id="fRollNo" name="fRollNo" readonly></div>
-                    
-                    <div>
-                        <label>Historical Arrears / Unpaid Balance Value (Rs.)</label>
-                        <input type="text" id="fPrevBalance" readonly value="0" style="color: #dc3545; font-weight: bold; font-size: 16px;">
-                    </div>
-                    
-                    <div style="grid-column: span 2;" class="no-print">
-                        <label>Months/Installments Already Cleared / Paid For:</label>
-                        <div id="cleared-months-display" class="meta-display-box" style="background-color: #ebfef2; color:#1b5a34; border-color:#28a745;">No record queried.</div>
-                    </div>
-
-                    <div>
-                        <label>Fee Schedule Structure Type Tier Configuration</label>
-                        <select id="fType" name="fType" onchange="toggleFeeScheduleStructure()" required>
-                            <option value="Monthly">Monthly Structure (Nursery to Class X)</option>
-                            <option value="Installment">Installment Structure (Classes XI & XII)</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Multi-Month Selection Block -->
-                    <div id="monthly-picker-group">
-                        <label>Select Span Multiplier & Duration Term Block</label>
-                        <div class="fee-flow-group">
-                            <input type="number" id="fMonthsCount" min="1" max="10" placeholder="Count" value="1" oninput="calculateDynamicTariff()">
-                            <select id="fStartMonth" onchange="calculateDynamicTariff()">
-                                <option value="0">March</option><option value="1">April</option><option value="2">May</option>
-                                <option value="3">June</option><option value="4">July</option><option value="5">August</option>
-                                <option value="6">September</option><option value="7">October</option><option value="8">November</option>
-                                <option value="9">December</option>
-                            </select>
-                            <span style="font-weight: bold; color: #666;">to</span>
-                            <input type="text" id="fEndMonthDisplay" readonly style="width: 140px; font-weight: bold; text-align: center;" value="March">
-                        </div>
-                    </div>
-
-                    <!-- Higher Secondary Installment Range Selection Block (Identical to Monthly layout) -->
-                    <div id="installment-picker-group" class="hidden">
-                        <label>Select Multi-Installment Range Term Block</label>
-                        <div class="fee-flow-group">
-                            <input type="number" id="fInstallmentCount" min="1" max="4" placeholder="Count" value="1" oninput="calculateDynamicTariff()">
-                            <select id="fStartInstallment" onchange="calculateDynamicTariff()">
-                                <option value="0">Installment 1</option>
-                                <option value="1">Installment 2</option>
-                                <option value="2">Installment 3</option>
-                                <option value="3">Installment 4</option>
-                            </select>
-                            <span style="font-weight: bold; color: #666;">to</span>
-                            <input type="text" id="fEndInstallmentDisplay" readonly style="width: 150px; font-weight: bold; text-align: center;" value="Installment 1">
-                        </div>
-                    </div>
-
-                    <div style="grid-column: span 2;">
-                        <label>Remaining Unpaid Calendar Cycles/Installments Left:</label>
-                        <div id="remaining-months-display" class="meta-display-box">No active schedule computed.</div>
-                    </div>
-
-                    <div>
-                        <label>Receipt Book Number (Type Custom or Leave Blank for Auto)</label>
-                        <input type="text" id="fReceiptNo" name="fReceiptNo" placeholder="e.g. Book-1/Sl-45">
-                    </div>
-                    <div><label>Current Processing Date Ledger Frame</label><input type="date" id="fTransactionDate" name="fTransactionDate" required></div>
-
-                    <div><label>Automated Dynamic Amount Due (Rs.)</label><input type="number" id="fTotalDue" name="fTotalDue" readonly style="font-weight:bold; font-size:16px; color:#28a745;"></div>
-                    <div><label>Amount Collected / Paid (Rs.) * [Autofilled - Adjustable]</label><input type="number" id="fAmountPaid" name="fAmountPaid" required oninput="evaluateRemainingBalance()"></div>
-                    
-                    <div>
-                        <label>Payment Collection Mode Gateway Type</label>
-                        <select id="fPaymentMode" name="fPaymentMode" onchange="checkPaymentMode(this)">
-                            <option value="Cash">Cash Depot Drawer</option>
-                            <option value="Online">Online Wire Transfer Gateway</option>
-                        </select>
-                    </div>
-                    
-                    <div style="grid-column: span 2;">
-                        <label>Calculated Total Balance Remaining on This Bill Transaction</label>
-                        <div id="balance-display" class="balance-box">Rs. 0.00</div>
-                        <input type="hidden" id="fBalance" name="fBalance" value="0">
-                        <input type="hidden" id="fPeriod" name="fPeriod" value="">
-                        <input type="hidden" id="fMonthsCount" id="fMonthsCountHidden" value="1">
-                    </div>
-
-                    <div style="grid-column: span 2; margin-top:15px;" class="no-print">
-                        <button type="submit" id="fees-submit-btn" style="background-color: #28a745; width:100%; font-size:16px;" disabled>Commit Collections Ledger and Issue Receipt Document</button>
-                        <div style="text-align:center;"><span id="fees-form-msg" class="status-msg"></span></div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Financial Audit Subsystem Framework Workspace -->
-    <div id="audit-module" class="tab-content hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap:10px;" id="audit-controls">
-            <h3 style="color:#6f42c1; margin:0;">Institutional Revenue Audit Records (Fiscal Term: April to March)</h3>
-            <div style="display:flex; gap:10px;">
-                <select id="audit-class-filter" onchange="displayAuditRows()" style="width: 210px; font-weight: bold; border-color: #6f42c1;">
-                    <option value="ALL">All Class Brackets</option>
-                    <option value="Nursery to II">Nursery to Class II</option>
-                    <option value="III - X">Class III to Class X</option>
-                    <option value="XI - XII">Class XI to Class XII</option>
-                </select>
-                <button onclick="loadAuditLogs()" style="background-color:#6f42c1;">Sync Live Records</button>
-                <button onclick="exportToExcel()" style="background-color:#28a745;">Download Excel 📥</button>
-                <button onclick="window.print()" style="background-color:#4b6584;">Print Report 🖨️</button>
-            </div>
-        </div>
-        <p id="audit-restriction-notice" style="color:red; font-weight:bold; margin-top:10px;"></p>
-        
-        <div id="audit-workspace-table-view">
-            <table class="audit-table" id="main-audit-html-table">
-                <thead>
-                    <tr>
-                        <th>Date of Payment</th>
-                        <th>Receipt Number</th>
-                        <th>Collected Amount (Rs.)</th>
-                        <th>Class Bracket Category</th>
-                    </tr>
-                </thead>
-                <tbody id="audit-table-body">
-                    <tr><td colspan="4" style="text-align:center; color:#888; font-style:italic;">Initialize data array retrieval by clicking Sync Live Records.</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<footer>
-    &copy; 2026 Good Shepherd Higher Secondary School | Portal Developed by Sengkan M Sangma
-</footer>
 
 <script>
-    // 👇 ADD YOUR APPS SCRIPT DEPLOYMENT URL HERE 👇
-    const API_URL = "https://script.google.com/macros/s/AKfycbzaestDlAbXaFm58tPrIdfxBW5VKJ5coS6Tv8GKlcwnBJ7AuiIm2TKWX0_Hpcmxa0fGng/exec";
+  // *** IMPORTANT: REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL ***
+  const API_URL = "https://script.google.com/macros/s/AKfycby2Yoyobx4n9CFVA0C2JNBkfRU5ul5mVrCX7d1hlPrYcmYdNQtFdYkbuCa4QfEfTnM/exec";
 
-    let currentUserRole = '';
-    let localAuditDataCache = []; 
-    const baseMonthsList = ["March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const baseInstallmentsList = ["Installment 1", "Installment 2", "Installment 3", "Installment 4"];
-
-    // Centralized fetch helper to communicate with Google Sheet backend
-    async function apiCall(action, payload = {}) {
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: action, payload: payload }),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8', 
-                }
-            });
-            return await response.json();
-        } catch (error) {
-            console.error("API Error:", error);
-            return { success: false, message: "Network error. Make sure your API_URL is correct and deployed as 'Anyone'." };
-        }
+  function onClubChange() {
+    const club = document.getElementById("clubType").value;
+    if (club) {
+      document.getElementById("label-coordinator").innerText = `2. ${club} Teacher Coordinator:`;
+      document.getElementById("label-captain").innerText = `3. ${club} Captain:`;
+      document.getElementById("label-vicecaptain").innerText = `4. ${club} Vice Captain:`;
+      
+      document.getElementById("step-coordinator").classList.add("active");
     }
+  }
 
-    async function attemptLogin() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        const b = document.getElementById('login-btn');
-        const m = document.getElementById('login-msg');
-        if(!u || !p) { m.innerText = "Validation fields empty."; return; }
-        b.disabled = true; b.innerText = "Authenticating..."; m.innerText = "";
-        
-        const res = await apiCall('verifyLogin', { username: u, password: p });
-        onLoginSuccess(res);
+  function checkFields() {
+    const coord = document.getElementById("coordinatorName").value.trim();
+    const cap = document.getElementById("captainName").value.trim();
+    const vice = document.getElementById("viceCaptainName").value.trim();
+
+    if (coord.length > 0) document.getElementById("step-captain").classList.add("active");
+    if (cap.length > 0) document.getElementById("step-vicecaptain").classList.add("active");
+    
+    // Show Submit and Reset buttons if all fields have text
+    if (coord.length > 0 && cap.length > 0 && vice.length > 0) {
+      document.getElementById("btnGroup").style.display = "flex";
+    } else {
+      document.getElementById("btnGroup").style.display = "none";
     }
+  }
 
-    function onLoginSuccess(res) {
-        const b = document.getElementById('login-btn');
-        if(res.success) {
-            currentUserRole = res.role;
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById('dashboard-section').classList.remove('hidden');
-            document.getElementById('user-role-display').innerText = res.role;
-            document.getElementById('fTransactionDate').value = "2026-07-15"; 
-            refreshDashboardData();
-            enforcePermissions();
-        } else {
-            b.disabled = false; b.innerText = "Authorize Profile";
-            document.getElementById('login-msg').innerText = res.message;
-        }
-    }
+  // Function for the bottom Reset Button
+  function exitForm() {
+    document.getElementById("registrationForm").reset();
+    document.getElementById("step-coordinator").classList.remove("active");
+    document.getElementById("step-captain").classList.remove("active");
+    document.getElementById("step-vicecaptain").classList.remove("active");
+    document.getElementById("btnGroup").style.display = "none";
+    
+    // Optional: Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-    function enforcePermissions() {
-        const adInputs = document.getElementById('admissionForm').elements;
-        const sdInputs = document.getElementById('studentDataForm').elements;
-        
-        document.getElementById('nav-admission').classList.remove('hidden');
-        document.getElementById('nav-studentdata').classList.remove('hidden');
-        document.getElementById('nav-assessments').classList.remove('hidden');
-        document.getElementById('nav-audit').classList.remove('hidden');
-        document.getElementById('fees-active-container').classList.remove('hidden');
-        document.getElementById('fees-restriction-msg').innerText = "";
-        document.getElementById('audit-restriction-notice').innerText = "";
-        
-        if (currentUserRole === 'Teacher') {
-            document.getElementById('admin-notice').innerText = "Permission Locked: Read-Only.";
-            for (let i = 0; i < adInputs.length; i++) adInputs[i].disabled = true;
-            document.getElementById('admission-submit-btn').style.display = "none";
-            document.getElementById('admin-notice-panel').classList.add('hidden');
-            for (let j = 0; j < sdInputs.length; j++) sdInputs[j].disabled = false;
-            document.getElementById('student-submit-btn').style.display = "block";
-            document.getElementById('fees-active-container').classList.add('hidden');
-            document.getElementById('fees-restriction-msg').innerText = "Security Alert: Restricted Tab Access.";
-            document.getElementById('nav-audit').classList.add('hidden');
-        } else if (currentUserRole === 'Accountant') {
-            document.getElementById('admin-notice').innerText = "View-Only Accountant Account Privileges.";
-            for (let i = 0; i < adInputs.length; i++) adInputs[i].disabled = true;
-            document.getElementById('admission-submit-btn').style.display = "none";
-            document.getElementById('admin-notice-panel').classList.add('hidden');
-            for (let j = 0; j < sdInputs.length; j++) sdInputs[j].disabled = true;
-            document.getElementById('student-submit-btn').style.display = "none";
-        }
-    }
+  // Handle the form submission to the API
+  document.getElementById("registrationForm").addEventListener("submit", function(e) {
+    e.preventDefault(); 
+    
+    const btn = document.getElementById("submitBtn");
+    const statusMsg = document.getElementById("status-message");
+    
+    btn.disabled = true;
+    btn.innerText = "Processing Record...";
+    
+    const formData = new FormData(this);
 
-    async function lookupStudentFees() {
-        var idVal = document.getElementById('fee-search-id').value.trim();
-        var status = document.getElementById('fee-search-status');
-        if(!idVal) return alert("Please type an Admission Number.");
-        status.style.color = "orange"; status.innerText = "Querying live ledger tracking arrays...";
+    fetch(API_URL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === "success") {
+        // Hide the form and show Green Tick Success Box
+        this.style.display = "none";
+        document.getElementById("instructions").style.display = "none";
         
-        const res = await apiCall('lookupStudentByAdmissionNo', { admissionNo: idVal });
-        
-        if(res.success) {
-            status.style.color = "green"; status.innerText = "Ledger profile sync completed.";
-            document.getElementById('fName').value = res.name;
-            document.getElementById('fClassSec').value = res.classSec;
-            document.getElementById('fRollNo').value = res.rollNo;
-            
-            if(res.calculatedUnpaidBalance <= 0) {
-                document.getElementById('fPrevBalance').value = "COMPLETED";
-                document.getElementById('fPrevBalance').style.color = "#28a745";
-            } else {
-                document.getElementById('fPrevBalance').value = res.calculatedUnpaidBalance;
-                document.getElementById('fPrevBalance').style.color = "#dc3545";
-            }
-            
-            if(res.clearedMonths && res.clearedMonths.length > 0) {
-                document.getElementById('cleared-months-display').innerText = res.clearedMonths.join(", ");
-                window.globalClearedMonths = res.clearedMonths;
-            } else {
-                document.getElementById('cleared-months-display').innerText = "None (No previous transactions found)";
-                window.globalClearedMonths = [];
-            }
-            
-            var cls = res.classSec.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-            if(cls.includes("XI") || cls.includes("XII") || cls.includes("11") || cls.includes("12")) {
-                document.getElementById('fType').value = "Installment";
-            } else {
-                document.getElementById('fType').value = "Monthly";
-            }
-            toggleFeeScheduleStructure();
-        } else {
-            status.style.color = "red"; status.innerText = res.message;
-            clearFeesFormDetails();
-        }
-    }
-
-    function toggleFeeScheduleStructure() {
-        var type = document.getElementById('fType').value;
-        if(type === "Monthly") {
-            document.getElementById('monthly-picker-group').classList.remove('hidden');
-            document.getElementById('installment-picker-group').classList.add('hidden');
-        } else {
-            document.getElementById('monthly-picker-group').classList.add('hidden');
-            document.getElementById('installment-picker-group').classList.remove('hidden');
-        }
-        calculateDynamicTariff();
-    }
-
-    function calculateDynamicTariff() {
-        var clsStr = document.getElementById('fClassSec').value.trim().toUpperCase();
-        var type = document.getElementById('fType').value;
-        var dueBox = document.getElementById('fTotalDue');
-        
-        var formStatus = document.getElementById('fee-search-status');
-        var submitBtn = document.getElementById('fees-submit-btn');
-        
-        if(!clsStr) { dueBox.value = 0; return; }
-        var baseClass = clsStr.replace(/[^A-Z0-9]/g, "");
-        var netCalculatedFee = 0;
-        var activeTermSpanSelection = [];
-        
-        var cleared = window.globalClearedMonths || [];
-        var localizedConflictFound = false;
-        var conflictingPeriodName = "";
-        var totalUnitsCount = 1;
-
-        if(type === "Monthly") {
-            var count = parseInt(document.getElementById('fMonthsCount').value) || 1;
-            var sIdx = parseInt(document.getElementById('fStartMonth').value);
-            
-            if(count < 1) { count = 1; document.getElementById('fMonthsCount').value = 1; }
-            if(count > 10) { count = 10; document.getElementById('fMonthsCount').value = 10; }
-            
-            var eIdx = sIdx + (count - 1);
-            if(eIdx > 9) { eIdx = 9; count = eIdx - sIdx + 1; document.getElementById('fMonthsCount').value = count; }
-            document.getElementById('fEndMonthDisplay').value = baseMonthsList[eIdx];
-            totalUnitsCount = count;
-            
-            for(var k = sIdx; k <= eIdx; k++) { 
-                activeTermSpanSelection.push(baseMonthsList[k]); 
-                if(cleared.indexOf(baseMonthsList[k]) !== -1) {
-                    localizedConflictFound = true;
-                    conflictingPeriodName = baseMonthsList[k];
-                }
-            }
-            
-            var ratePerMonth = 520; 
-            if (baseClass.includes("NUR") || baseClass.includes("KG") || baseClass.includes("CLASSI") || baseClass.includes("CLASSII") || baseClass === "I" || baseClass === "II" || baseClass === "1" || baseClass === "2") {
-                ratePerMonth = 470; 
-            }
-            
-            netCalculatedFee = (ratePerMonth * count);
-            document.getElementById('fPeriod').value = baseMonthsList[sIdx] + " to " + baseMonthsList[eIdx];
-            
-        } else {
-            var instCount = parseInt(document.getElementById('fInstallmentCount').value) || 1;
-            var sInstIdx = parseInt(document.getElementById('fStartInstallment').value);
-            
-            if(instCount < 1) { instCount = 1; document.getElementById('fInstallmentCount').value = 1; }
-            if(instCount > 4) { instCount = 4; document.getElementById('fInstallmentCount').value = 4; }
-            
-            var eInstIdx = sInstIdx + (instCount - 1);
-            if(eInstIdx > 3) { eInstIdx = 3; instCount = eInstIdx - sInstIdx + 1; document.getElementById('fInstallmentCount').value = instCount; }
-            document.getElementById('fEndInstallmentDisplay').value = baseInstallmentsList[eInstIdx];
-            totalUnitsCount = instCount;
-            
-            for(var i = sInstIdx; i <= eInstIdx; i++) {
-                activeTermSpanSelection.push(baseInstallmentsList[i]);
-                if(cleared.indexOf(baseInstallmentsList[i]) !== -1) {
-                    localizedConflictFound = true;
-                    conflictingPeriodName = baseInstallmentsList[i];
-                }
-            }
-            
-            netCalculatedFee = (1950 * instCount);
-            document.getElementById('fPeriod').value = baseInstallmentsList[sInstIdx] + " to " + baseInstallmentsList[eInstIdx];
-        }
-        
-        if(localizedConflictFound) {
-            formStatus.style.color = "red";
-            formStatus.innerHTML = "⚠️ <strong>Already Paid!</strong> The collection selection <strong>[" + conflictingPeriodName + "]</strong> is already cleared.";
-            alert("This term installment allocation (" + conflictingPeriodName + ") has already been paid. Selection is blocked.");
-            
-            dueBox.value = 0;
-            document.getElementById('fAmountPaid').value = 0;
-            document.getElementById('remaining-months-display').innerText = "Change parameters to recalculate.";
-            submitBtn.disabled = true;
-            evaluateRemainingBalance();
-            return;
-        } else {
-            if(formStatus.innerText.includes("Already Paid")) {
-                formStatus.style.color = "green";
-                formStatus.innerText = "Selection parameters valid.";
-            }
-        }
-        
-        var outstandingCycles = [];
-        if(type === "Monthly") {
-            baseMonthsList.forEach(function(m){
-                if(cleared.indexOf(m) === -1 && activeTermSpanSelection.indexOf(m) === -1) {
-                    outstandingCycles.push(m);
-                }
-            });
-            document.getElementById('remaining-months-display').innerText = outstandingCycles.length > 0 ? outstandingCycles.join(", ") : "All Cycles Settled.";
-        } else {
-            baseInstallmentsList.forEach(function(o){
-               if(cleared.indexOf(o) === -1 && activeTermSpanSelection.indexOf(o) === -1) { outstandingCycles.push(o); }
-            });
-            document.getElementById('remaining-months-display').innerText = outstandingCycles.length > 0 ? outstandingCycles.join(", ") : "All Installments Settled.";
-        }
-        
-        dueBox.value = netCalculatedFee;
-        document.getElementById('fAmountPaid').value = netCalculatedFee; 
-        
-        var hiddenBox = document.getElementsByName('fMonthsCount')[0];
-        if(hiddenBox) { hiddenBox.value = totalUnitsCount; }
-        
-        evaluateRemainingBalance();
-    }
-
-    function evaluateRemainingBalance() {
-        var due = parseFloat(document.getElementById('fTotalDue').value) || 0;
-        var paid = parseFloat(document.getElementById('fAmountPaid').value) || 0;
-        var diffLeft = due - paid;
-        
-        document.getElementById('fBalance').value = diffLeft;
-        document.getElementById('balance-display').innerText = "Rs. " + diffLeft.toFixed(2);
-        document.getElementById('fees-submit-btn').disabled = (due <= 0);
-    }
-
-    function checkPaymentMode(dropdown) {
-        if(dropdown.value === "Online") {
-            alert("Online tracking engine integration coming soon.");
-            dropdown.value = "Cash";
-        }
-    }
-
-    async function handleFeesSubmit(e) {
-        e.preventDefault();
-        const b = document.getElementById('fees-submit-btn');
-        b.disabled = true; b.innerText = "Appending Secure Transaction Records...";
-        
-        var type = document.getElementById('fType').value;
-        var unitCount = (type === "Monthly") ? document.getElementById('fMonthsCount').value : document.getElementById('fInstallmentCount').value;
-        
-        var payload = {
-            fAdmissionNo: document.getElementById('fee-search-id').value,
-            fName: document.getElementById('fName').value,
-            fClassSec: document.getElementById('fClassSec').value,
-            fRollNo: document.getElementById('fRollNo').value,
-            fType: type,
-            fPeriod: document.getElementById('fPeriod').value,
-            fMonthsCount: unitCount,
-            fTotalDue: document.getElementById('fTotalDue').value,
-            fAmountPaid: document.getElementById('fAmountPaid').value,
-            fBalance: document.getElementById('fBalance').value,
-            fPaymentMode: document.getElementById('fPaymentMode').value,
-            fTransactionDate: document.getElementById('fTransactionDate').value,
-            fReceiptNo: document.getElementById('fReceiptNo').value
-        };
-
-        const res = await apiCall('saveFeesRecord', payload);
-        
-        b.disabled = false; b.innerText = "Commit Collections Ledger and Issue Receipt Document";
-        var msg = document.getElementById('fees-form-msg');
-        msg.style.color = res.success ? "green" : "red"; msg.innerText = res.message;
-        if(res.success) { 
-            setTimeout(() => { clearFeesFormDetails(); document.getElementById('fee-search-id').value=""; msg.innerText=""; }, 3000);
-        }
-    }
-
-    function clearFeesFormDetails() {
-        document.getElementById('fName').value = ""; document.getElementById('fClassSec').value = "";
-        document.getElementById('fRollNo').value = ""; document.getElementById('fPrevBalance').value = "0";
-        document.getElementById('fTotalDue').value = 0; document.getElementById('fAmountPaid').value = "";
-        document.getElementById('fReceiptNo').value = "";
-        document.getElementById('fMonthsCount').value = 1;
-        document.getElementById('fInstallmentCount').value = 1;
-        document.getElementById('cleared-months-display').innerText = "No record queried.";
-        document.getElementById('remaining-months-display').innerText = "No active schedule computed.";
-        evaluateRemainingBalance();
-    }
-
-    async function loadAuditLogs() {
-        var tbody = document.getElementById('audit-table-body');
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; font-weight:bold; color:#6f42c1;">Recompiling ledger arrays...</td></tr>`;
-        
-        const records = await apiCall('getFiscalAuditRecords');
-        localAuditDataCache = records || [];
-        displayAuditRows();
-    }
-
-    function displayAuditRows() {
-        var tbody = document.getElementById('audit-table-body');
-        var selectedFilter = document.getElementById('audit-class-filter').value;
-        
-        if(!localAuditDataCache || localAuditDataCache.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888;">No transactions found inside database logs.</td></tr>`;
-            return;
-        }
-        
-        tbody.innerHTML = "";
-        var visibleCount = 0;
-        
-        localAuditDataCache.forEach(function(row) {
-            if(selectedFilter !== "ALL" && row.classGroup !== selectedFilter) return;
-            visibleCount++;
-            
-            var tr = document.createElement('tr');
-            var rawDate = row.date;
-            if(rawDate.includes("GMT") || rawDate.includes("00:00:00")) {
-                try { rawDate = new Date(rawDate).toLocaleDateString('en-GB'); } catch(e){}
-            }
-            var tdDate = document.createElement('td'); tdDate.innerText = rawDate; tr.appendChild(tdDate);
-            var tdReceipt = document.createElement('td'); tdReceipt.innerText = row.receipt; tr.appendChild(tdReceipt);
-            
-            var tdAmount = document.createElement('td');
-            var cellInput = document.createElement('input');
-            cellInput.type = "number";
-            cellInput.className = "editable-cell";
-            cellInput.value = row.amount;
-            
-            if(currentUserRole === 'Teacher') {
-                cellInput.disabled = true;
-                cellInput.style.backgroundColor = "#eee";
-            } else {
-                cellInput.onchange = async function() {
-                    var newVal = this.value;
-                    this.style.backgroundColor = "#ffcccc";
-                    
-                    const res = await apiCall('updateAuditCell', {
-                        sheetName: row.sheetName, row: row.rowNum, col: row.colNum, value: newVal
-                    });
-                    
-                    if(res.success) {
-                        cellInput.style.backgroundColor = "#ccffcc";
-                        setTimeout(function(){ cellInput.style.backgroundColor = "#ffffcc"; }, 1200);
-                    } else {
-                        alert("Failed to alter record: " + res.message);
-                    }
-                };
-            }
-            tdAmount.appendChild(cellInput);
-            tr.appendChild(tdAmount);
-            
-            var tdGroup = document.createElement('td'); tdGroup.innerText = row.classGroup; tr.appendChild(tdGroup);
-            tbody.appendChild(tr);
-        });
-        
-        if(visibleCount === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#e74c3c; font-style:italic;">No records match the selected class bracket criteria.</td></tr>`;
-        }
-    }
-
-    function exportToExcel() {
-        var selectedFilter = document.getElementById('audit-class-filter').value;
-        var csvContent = "data:text/csv;charset=utf-8,";
-        
-        csvContent += `"GOOD SHEPHERD HIGHER SECONDARY SCHOOL"\n`;
-        csvContent += `"Audit Record of Year: 2026-2027 (Bracket: ${selectedFilter})"\n\n`;
-        csvContent += `"Payment Date","Receipt Number","Collected Amount (Rs.)","Class Group Category"\n`;
-        
-        var matchFound = false;
-        localAuditDataCache.forEach(function(row) {
-            if(selectedFilter !== "ALL" && row.classGroup !== selectedFilter) return;
-            matchFound = true;
-            var rawDate = row.date;
-            if(rawDate.includes("GMT") || rawDate.includes("00:00:00")) {
-                try { rawDate = new Date(rawDate).toLocaleDateString('en-GB'); } catch(e){}
-            }
-            csvContent += `"${rawDate}","${row.receipt}","${row.amount}","${row.classGroup}"\n`;
-        });
-        
-        if(!matchFound) {
-            alert("No data matched current parameters to produce export spreadsheet lines.");
-            return;
-        }
-        
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `GSHSS_Audit_Record_2026_${selectedFilter.replace(/\s+/g, '_')}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    async function refreshDashboardData() {
-        const d = await apiCall('getDashboardData');
-        if (!d || d.success === false) return;
-
-        document.getElementById('dash-teachers').innerText = d.teachers;
-        document.getElementById('dash-students').innerText = d.students;
-        document.getElementById('dash-admissions').innerText = d.admissions;
-        document.getElementById('dash-notices').innerText = d.notices;
-        
-        var feed = document.getElementById('notices-feed-container');
-        if(d.noticesList && d.noticesList.length > 0) {
-            feed.innerHTML = "";
-            d.noticesList.forEach(function(n) {
-                feed.innerHTML += `
-                    <div class="stat-card" style="border-left-color:#17a2b8; text-align:left;">
-                        <h4 style="color:#17a2b8; margin-bottom:8px;">${n.title}</h4>
-                        <p style="font-size:12px; color:#666; margin:0 0 15px 0;">Posted: <strong>${n.date}</strong></p>
-                        <a href="${n.link}" target="_blank" style="background-color:#17a2b8; color:#fff; padding:6px 12px; text-decoration:none; border-radius:4px; font-weight:bold; font-size:11px; display:inline-block;">View Document ↗</a>
-                    </div>`;
-            });
-        } else {
-            feed.innerHTML = `<p style="color:#777; font-style:italic;">No active notifications.</p>`;
-        }
-    }
-
-    // Helper to serialize HTML form elements into a JSON object
-    function serializeForm(formElement) {
-        const formData = new FormData(formElement);
-        const data = {};
-        formData.forEach((value, key) => (data[key] = value));
-        return data;
-    }
-
-    function handleAdmissionSubmit(e) { e.preventDefault(); transmitForm('admissionForm', 'admission-submit-btn', 'admission-form-msg', 'saveAdmissionData'); }
-    function handleStudentDataSubmit(e) { e.preventDefault(); transmitForm('studentDataForm', 'student-submit-btn', 'student-form-msg', 'saveStudentCurrentData'); }
-
-    async function transmitForm(fId, bId, mId, endpoint) {
-        const f = document.getElementById(fId); const b = document.getElementById(bId); const m = document.getElementById(mId);
-        b.disabled = true; b.innerText = "Transmitting to Database Ledger..."; m.innerText = "";
-        
-        const payload = serializeForm(f);
-        const res = await apiCall(endpoint, payload);
-
-        b.disabled = false; b.innerText = "Save Data Records";
-        m.style.color = res.success ? "green" : "red"; m.innerText = res.message;
-        if(res.success) { f.reset(); refreshDashboardData(); }
-    }
-
-    async function submitNewNotice() {
-        var t = document.getElementById('notice-title').value; var u = document.getElementById('notice-url').value;
-        if(!t || !u) return alert("Fill all components inputs.");
-        
-        await apiCall('postNotice', { title: t, url: u });
-        
-        document.getElementById('notice-title').value = ""; 
-        document.getElementById('notice-url').value = ""; 
-        refreshDashboardData();
-    }
-
-    function showTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-        if(id === 'dashboard-home') refreshDashboardData();
-        if(id === 'audit-module') loadAuditLogs();
-    }
-
-    function logout() {
-        document.getElementById('dashboard-section').classList.add('hidden');
-        document.getElementById('login-section').classList.remove('hidden');
-        document.getElementById('username').value = ''; document.getElementById('password').value = '';
-    }
+        statusMsg.innerHTML = `
+          <span class="status-icon">✅</span>
+          <strong>Thank you for your interest!</strong><br>
+          Your official record has been submitted successfully.
+        `;
+        statusMsg.className = "success";
+        statusMsg.style.display = "block";
+      } else {
+        throw new Error(data.message);
+      }
+    })
+    .catch(error => {
+      // Re-enable button and show Red Cross Error Box
+      btn.disabled = false;
+      btn.innerText = "Submit Official Record";
+      
+      statusMsg.innerHTML = `
+        <span class="status-icon">❌</span>
+        <strong>Submission Error:</strong><br>
+        Something went wrong or data was mistaken. Please check your connection and try again. 
+        <br><br><span style="font-size:14px;">(Error detail: ${error.message})</span>
+      `;
+      statusMsg.className = "error";
+      statusMsg.style.display = "block";
+    });
+  });
 </script>
+
 </body>
 </html>
