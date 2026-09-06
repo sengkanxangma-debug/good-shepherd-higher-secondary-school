@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Good Shepherd HSS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .table-container::-webkit-scrollbar { height: 8px; width: 8px; }
+        .table-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; border: 2px solid #f8fafc; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .input-glow:focus { box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); border-color: #6366f1; outline: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen w-full overflow-x-hidden relative">
+
+    <div id="login-overlay" class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white p-10 rounded-2xl shadow-2xl max-w-sm w-full text-center transform transition-transform scale-100 border border-slate-100">
+            <div class="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Teacher Portal</h2>
+            <p class="text-sm text-slate-500 mb-8 font-medium">Authenticate to access academic records.</p>
+            <input type="password" id="auth-pwd" placeholder="Enter Password" class="w-full px-5 py-4 rounded-xl border border-slate-200 input-glow mb-5 font-medium text-center tracking-widest text-lg bg-slate-50 transition-all">
+            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">Authenticate Securely</button>
+            <p id="login-error" class="text-rose-500 text-sm font-bold mt-4 hidden bg-rose-50 py-2 rounded-lg border border-rose-100">Incorrect Password. Access Denied.</p>
+        </div>
+    </div>
+
+    <div id="dashboard-content" class="hidden flex flex-col min-h-screen">
+        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-blue-900 text-white px-4 sm:px-8 py-5 flex flex-col sm:flex-row justify-between items-center shadow-lg z-10 gap-4 border-b border-indigo-700/50">
+            <div class="flex items-center space-x-4 w-full sm:w-auto">
+                <div class="p-2 bg-white/10 rounded-xl backdrop-blur-md hidden sm:block border border-white/10">
+                    <svg class="w-7 h-7 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight drop-shadow-sm">GOOD SHEPHERD HSS</h1>
+                    <p class="text-xs sm:text-sm text-indigo-200 font-medium">Professional Marks & Result Management</p>
+                </div>
+            </div>
+            <div class="text-xs text-indigo-100">
+                <span class="bg-black/20 border border-white/10 px-4 py-2 rounded-full font-bold shadow-inner inline-block">Academic Session: 2026</span>
+            </div>
+        </header>
+
+        <div class="flex flex-1 flex-col lg:flex-row w-full bg-slate-100/50">
+            <aside class="w-full lg:w-72 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex-shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-0 flex flex-col">
+                <nav class="p-5 space-y-2 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 hidden lg:block px-2">Navigation Menu</p>
+                    
+                    <button onclick="switchTab('enter-marks')" id="btn-enter-marks" class="nav-btn w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all bg-indigo-600 text-white shadow-md hover:shadow-lg whitespace-nowrap group">
+                        <svg class="w-5 h-5 opacity-90 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span>Marks Entry</span>
+                    </button>
+                    
+                    <button onclick="switchTab('view-records', 'rank')" id="btn-rank-holders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-slate-50 text-slate-600 whitespace-nowrap group">
+                        <svg class="w-5 h-5 text-amber-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        <span>Rank Holders</span>
+                    </button>
+                    
+                    <button onclick="switchTab('view-records', 'fail')" id="btn-failer" class="nav-btn w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-rose-50 hover:text-rose-700 text-slate-600 whitespace-nowrap group">
+                        <svg class="w-5 h-5 text-rose-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Failed Candidates</span>
+                    </button>
+                    
+                    <button onclick="switchTab('view-records', 'pass')" id="btn-passed" class="nav-btn w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 whitespace-nowrap group">
+                        <svg class="w-5 h-5 text-emerald-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Passed Candidates</span>
+                    </button>
+                    
+                    <button onclick="switchTab('publish-marks')" id="btn-publish" class="nav-btn w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-blue-50 hover:text-blue-700 text-slate-600 whitespace-nowrap group">
+                        <svg class="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        <span>Publish Results</span>
+                    </button>
+                    
+                    <div class="pt-4 mt-2 border-t border-slate-100 hidden lg:block">
+                        <a href="result.html" target="_blank" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all bg-slate-900 text-white shadow hover:shadow-lg whitespace-nowrap group">
+                            <span>Public Result Page</span>
+                            <svg class="w-4 h-4 opacity-70 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="flex-1 flex flex-col overflow-x-hidden">
+                <div class="flex-1 p-4 sm:p-8">
+                    <div id="status-notification-box" class="hidden mb-6 p-4 rounded-xl border flex items-center space-x-3 shadow-sm transform transition-all">
+                        <div id="status-icon" class="flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div id="status-text" class="text-sm font-bold"></div>
+                        </div>
+                    </div>
+
+                    <!-- ENTER MARKS SECTION -->
+                    <section id="tab-enter-marks" class="space-y-6 animate-fade-in">
+                        <div class="glass-panel p-6 sm:p-8 rounded-2xl shadow-sm">
+                            <h2 class="text-xl font-extrabold text-slate-900 mb-6 border-b border-slate-100 pb-4 flex items-center">
+                                <span class="w-2 h-6 bg-indigo-600 rounded-full mr-3"></span> Class & Section Setup
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Academic Section</label>
+                                    <select id="academic-section" onchange="handleSectionChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-700 input-glow">
+                                        <option value="higher_secondary">Higher Secondary (Class XI - XII Arts)</option>
+                                        <option value="secondary">Secondary (Classes IX - X)</option>
+                                        <option value="upper_primary">Upper Primary (Classes VI - VIII)</option>
+                                        <option value="lower_primary">Lower Primary (Classes I - V)</option>
+                                        <option value="pre_primary">Pre Primary (Nursery - UKG)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Class Dropdown</label>
+                                    <select id="class-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-700 input-glow"></select>
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="initializeClassSheet()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">Initialize Worksheet</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="workspace-card" class="bg-white rounded-2xl shadow-sm border border-slate-200 hidden overflow-hidden">
+                            <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-50/80 gap-4">
+                                <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2" id="current-sheet-title">
+                                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Marks Entry Sheet
+                                </h3>
+                                <div class="flex flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end">
+                                    <button onclick="addStudentRow()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                        Add Row
+                                    </button>
+                                    <button onclick="downloadExcelTemplate()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        Download Template
+                                    </button>
+                                    <button onclick="triggerExcelImport()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                        Import CSV
+                                    </button>
+                                    <input type="file" id="excel-file-picker" accept=".csv" class="hidden" onchange="importFromExcelCSV(event)" />
+                                </div>
+                            </div>
+                            <div class="table-container overflow-x-auto w-full p-2 bg-white">
+                                <table class="w-full text-left border-collapse min-w-[1200px]">
+                                    <thead><tr class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b-2 border-slate-100" id="table-header-row"></tr></thead>
+                                    <tbody id="student-table-body" class="divide-y divide-slate-100 text-sm font-medium"></tbody>
+                                </table>
+                            </div>
+                            <div class="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div class="text-xs text-slate-500 font-bold tracking-wide uppercase bg-white px-4 py-2 rounded-lg border border-slate-200">
+                                    Student Count: <span id="summary-count" class="font-black text-indigo-600 text-sm ml-1">0</span>
+                                </div>
+                                <button onclick="calculateAndSendToPublish(event)" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-sm px-8 py-3 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Calculate & Distribute Data
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- VIEW RECORDS SECTION -->
+                    <section id="tab-view-records" class="space-y-6 hidden">
+                        <div class="glass-panel p-6 sm:p-8 rounded-2xl shadow-sm">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-100 pb-4 gap-4">
+                                <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    </span>
+                                    <span id="record-view-title">Filtered Database Records</span>
+                                </h2>
+                                <div class="w-full sm:w-72">
+                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Filter Dataset</label>
+                                    <select id="record-class-filter" onchange="renderRecordsTable()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold input-glow"></select>
+                                </div>
+                            </div>
+                            <div class="table-container overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
+                                <table class="w-full text-left border-collapse min-w-[1000px]">
+                                    <thead>
+                                        <tr class="bg-slate-900 text-slate-200 text-xs uppercase tracking-widest font-bold">
+                                            <th class="p-4 rounded-tl-lg">Rank</th>
+                                            <th class="p-4">Roll No</th>
+                                            <th class="p-4">Student Name</th>
+                                            <th class="p-4">Total Score</th>
+                                            <th class="p-4 rounded-tr-lg">Final Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="records-table-body" class="divide-y divide-slate-100 text-sm font-medium"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PUBLISH RESULTS SECTION -->
+                    <section id="tab-publish-marks" class="space-y-6 hidden">
+                        <div class="glass-panel p-6 sm:p-10 rounded-2xl shadow-sm border-t-4 border-t-blue-500">
+                            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            </div>
+                            <h2 class="text-3xl font-black text-slate-900 mb-2 text-center">Publish Class Results</h2>
+                            <p class="text-slate-500 mb-8 text-sm font-medium max-w-lg mx-auto text-center">Select a class below. You can select/deselect individual students before publishing their compiled results to the public Database.</p>
+                            
+                            <div class="max-w-md mx-auto flex flex-col sm:flex-row gap-4 mb-8">
+                                <select id="publish-class-filter" onchange="renderPublishList()" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold input-glow"></select>
+                            </div>
+
+                            <div id="publish-table-container" class="hidden text-left animate-fade-in">
+                                <div class="table-container overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white mb-6">
+                                    <table class="w-full text-left border-collapse min-w-[800px]">
+                                        <thead>
+                                            <tr class="bg-slate-900 text-slate-200 text-xs uppercase tracking-widest font-bold">
+                                                <th class="p-4 rounded-tl-lg text-center w-16">
+                                                    <input type="checkbox" id="selectAllPublish" checked onchange="toggleAllPublish(this)" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                                                </th>
+                                                <th class="p-4">Roll No</th>
+                                                <th class="p-4">Student Name</th>
+                                                <th class="p-4">Rank</th>
+                                                <th class="p-4">Total Score</th>
+                                                <th class="p-4 rounded-tr-lg">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="publish-list-body" class="divide-y divide-slate-100 text-sm font-medium"></tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="publishSelectedResults()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 whitespace-nowrap inline-flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                        Submit & Publish to Database
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <footer class="bg-white border-t border-slate-200 text-center py-5 px-4 text-xs text-slate-500 w-full mt-auto">
+                    <p>© 2026 Good Shepherd Higher Secondary School, Chapahati - Nogorpara. All Rights Reserved.</p>
+                    <p class="mt-1.5">System Application Developed by: <a href="http://swd.linkpc.net" target="_blank" class="text-indigo-600 font-bold hover:text-indigo-800 transition-colors hover:underline">Sangmawebdeveloper (swd.linkpc.net)</a></p>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // REPLACE WITH YOUR APPS SCRIPT WEB APP URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbznKUPfy2olYbrzEY1P3U-BqoglJNjItuTWXHarYyM8lT6d6BCOf0V6XC_6URdntFwb/exec"; 
+
+        const subjectsMap = {
+            higher_secondary: ["English(compulsary)", "Education", "Political Science", "GSL/Sociology", "MIL/Alternative English", "Catechism/Moral Science", "Economics"],
+            secondary: ["English-I", "Garo", "Alt English", "Mathematics", "Science & Tech", "Social Science", "Computer Science", "Health & Phys Ed", "Catechism", "Moral Science", "Environmental Studies"],
+            upper_primary: ["English", "English - II", "Mathematics", "Science & Technology", "Social Science", "Garo", "Health & Physical Education", "Computer", "Hindi", "Catechism", "Moral Science", "Conversation"],
+            lower_primary: ["English", "Mathematics", "EVS", "Garo", "Computer", "Moral Science", "Drawing", "Conversation"],
+            pre_primary: ["English Reading", "English Writing", "Number Work", "Rhymes", "Drawing"]
+        };
+
+        const classOptions = {
+            higher_secondary: ["Class XI Arts", "Class XII Arts"],
+            secondary: ["Class IX", "Class X"],
+            upper_primary: ["Class VI-A","Class VI-B","Class VII","Class VIII"],
+            lower_primary: ["Class I-A", "Class I-B", "Class II-A", "Class II-B", "Class III-A", "Class III-B", "Class IV-A", "Class IV-B", "Class V-A", "Class V-B"],
+            pre_primary: ["Nursery A", "Nursery B", "LKG A", "LKG B", "UKG A", "UKG B"]
+        };
+
+        const sectionLabels = {
+            higher_secondary: "Higher Secondary",
+            secondary: "Secondary",
+            upper_primary: "Upper Primary",
+            lower_primary: "Lower Primary",
+            pre_primary: "Pre-Primary"
+        };
+
+        let activeClassRows = [];
+        let currentRecordFilter = 'all'; 
+        let localDatabaseCache = [];
+        let pendingPublishCache = []; 
+
+        window.onload = function() {
+            handleSectionChange();
+            populateRecordsFilterDropdown();
+        };
+
+        function handleLogin() {
+            const pwd = document.getElementById('auth-pwd').value;
+            if(pwd === 'asd123@#@') {
+                document.getElementById('login-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-overlay').classList.add('hidden');
+                    document.getElementById('dashboard-content').classList.remove('hidden');
+                }, 300);
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        // Returns merged database and pending records so they show in rank holders immediately
+        function getCombinedData() {
+            let combinedMap = new Map();
+            localDatabaseCache.forEach(d => combinedMap.set(d.className + '_' + d.rollNo, d));
+            pendingPublishCache.forEach(d => combinedMap.set(d.className + '_' + d.rollNo, d));
+            return Array.from(combinedMap.values());
+        }
+
+        function switchTab(tabId, filterType = 'all') {
+            document.querySelectorAll('section[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+            
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                if(el.id !== 'btn-enter-marks') el.classList.add('hover:bg-slate-50', 'text-slate-600');
+                else el.classList.add('bg-white', 'text-slate-600');
+            });
+            
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            if (tabId === 'enter-marks') {
+                const btn = document.getElementById('btn-enter-marks');
+                btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.remove('bg-white', 'text-slate-600');
+            } else if (tabId === 'view-records') {
+                currentRecordFilter = filterType;
+                const title = document.getElementById('record-view-title');
+                
+                if(filterType === 'rank') { 
+                    const btn = document.getElementById('btn-rank-holders');
+                    btn.classList.add('bg-slate-100', 'text-slate-900', 'shadow-sm');
+                    btn.classList.remove('hover:bg-slate-50', 'text-slate-600');
+                    title.innerText = "Rank Holders List"; 
+                }
+                if(filterType === 'fail') { 
+                    const btn = document.getElementById('btn-failer');
+                    btn.classList.add('bg-rose-50', 'text-rose-900', 'shadow-sm', 'border', 'border-rose-100');
+                    btn.classList.remove('hover:bg-rose-50', 'text-slate-600');
+                    title.innerText = "Failed Candidates Roster"; 
+                }
+                if(filterType === 'pass') { 
+                    const btn = document.getElementById('btn-passed');
+                    btn.classList.add('bg-emerald-50', 'text-emerald-900', 'shadow-sm', 'border', 'border-emerald-100');
+                    btn.classList.remove('hover:bg-emerald-50', 'text-slate-600');
+                    title.innerText = "Passed Candidates Registry"; 
+                }
+                fetchAndRenderRecords();
+            } else if (tabId === 'publish-marks') {
+                const btn = document.getElementById('btn-publish');
+                btn.classList.add('bg-blue-50', 'text-blue-900', 'shadow-sm', 'border', 'border-blue-100');
+                btn.classList.remove('hover:bg-blue-50', 'text-slate-600');
+                
+                const publishDropdown = document.getElementById('publish-class-filter');
+                const entryClass = document.getElementById('class-select').value;
+                if(entryClass && Array.from(publishDropdown.options).some(o => o.value === entryClass)) {
+                    publishDropdown.value = entryClass;
+                }
+                renderPublishList();
+            }
+        }
+
+        function handleSectionChange() {
+            const section = document.getElementById('academic-section').value;
+            const classSelect = document.getElementById('class-select');
+            classSelect.innerHTML = "";
+            classOptions[section].forEach(cls => {
+                let opt = document.createElement('option');
+                opt.value = cls;
+                opt.innerText = cls;
+                classSelect.appendChild(opt);
+            });
+        }
+
+        function populateRecordsFilterDropdown() {
+            const filterDropdown = document.getElementById('record-class-filter');
+            const publishDropdown = document.getElementById('publish-class-filter');
+            
+            filterDropdown.innerHTML = '<option value="">-- View All Recorded Classes --</option>';
+            publishDropdown.innerHTML = '<option value="">-- Select Class to View/Publish --</option>';
+            
+            Object.keys(classOptions).forEach(sectionKey => {
+                let filterGroup = document.createElement('optgroup');
+                filterGroup.label = sectionLabels[sectionKey];
+                let publishGroup = document.createElement('optgroup');
+                publishGroup.label = sectionLabels[sectionKey];
+                
+                classOptions[sectionKey].forEach(cls => {
+                    let opt1 = document.createElement('option'); opt1.value = cls; opt1.innerText = cls;
+                    let opt2 = document.createElement('option'); opt2.value = cls; opt2.innerText = cls;
+                    filterGroup.appendChild(opt1);
+                    publishGroup.appendChild(opt2);
+                });
+                filterDropdown.appendChild(filterGroup);
+                publishDropdown.appendChild(publishGroup);
+            });
+        }
+
+        function triggerUINotification(type, text) {
+            const box = document.getElementById('status-notification-box');
+            box.classList.remove('hidden');
+            if(type === 'success') {
+                box.className = "mb-6 p-4 rounded-xl border flex items-center space-x-3 shadow-sm bg-emerald-50 border-emerald-200 text-emerald-900";
+                box.innerHTML = `<div class="p-1.5 bg-emerald-500 rounded-full text-white"><svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-1"><div class="text-sm font-bold">${text}</div></div>`;
+            }
+            if(type === 'error') {
+                box.className = "mb-6 p-4 rounded-xl border flex items-center space-x-3 shadow-sm bg-rose-50 border-rose-200 text-rose-900";
+                box.innerHTML = `<div class="p-1.5 bg-rose-500 rounded-full text-white"><svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg></div><div class="flex-1"><div class="text-sm font-bold">${text}</div></div>`;
+            }
+            setTimeout(() => box.classList.add('hidden'), 5000);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function downloadExcelTemplate() {
+            const section = document.getElementById('academic-section').value;
+            const selectedClass = document.getElementById('class-select').value;
+            const subjects = subjectsMap[section];
+            const rowHeaders = ['Roll No', 'Student Name', ...subjects];
+            const sampleData = ['1', 'John Doe', ...Array(subjects.length).fill('75')];
+            const csvRows = [rowHeaders.join(','), sampleData.join(',')];
+            const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const downloadAnchor = document.createElement("a");
+            downloadAnchor.setAttribute("href", encodedUri);
+            downloadAnchor.setAttribute("download", `Template_${selectedClass.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+        }
+
+        function triggerExcelImport() { document.getElementById('excel-file-picker').click(); }
+
+        function importFromExcelCSV(event) {
+            const uploadedFile = event.target.files[0];
+            if (!uploadedFile) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const contentText = e.target.result;
+                    const dataLines = contentText.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+                    if (dataLines.length <= 1) return triggerUINotification('error', 'Import Failed: Selected template has no student records.');
+
+                    const section = document.getElementById('academic-section').value;
+                    const subjects = subjectsMap[section];
+                    activeClassRows = [];
+                    const tbody = document.getElementById('student-table-body');
+                    tbody.innerHTML = "";
+
+                    for (let lineIndex = 1; lineIndex < dataLines.length; lineIndex++) {
+                        const cellValues = dataLines[lineIndex].split(',');
+                        if (cellValues.length < 2) continue;
+                        const extractedRoll = cellValues[0] || lineIndex;
+                        const extractedName = cellValues[1] || "";
+                        insertNewRowMarkup(extractedRoll, extractedName, subjects);
+                        const currentGeneratedRowId = activeClassRows[activeClassRows.length - 1];
+                        const inputFields = document.getElementById(currentGeneratedRowId).querySelectorAll('.subject-input');
+                        inputFields.forEach((inputElement, subIndex) => {
+                            const parsedMark = cellValues[subIndex + 2];
+                            if (parsedMark !== undefined && parsedMark !== "") inputElement.value = Math.min(100, Math.max(0, parseInt(parsedMark) || 0));
+                        });
+                        calculateRowCalculations(currentGeneratedRowId);
+                    }
+                    document.getElementById('summary-count').innerText = activeClassRows.length;
+                    triggerUINotification('success', 'Excel/CSV template records imported successfully.');
+                } catch (err) { triggerUINotification('error', 'Failed parsing uploaded data file.'); }
+            };
+            reader.readAsText(uploadedFile);
+            event.target.value = ''; 
+        }
+
+        function initializeClassSheet() {
+            const section = document.getElementById('academic-section').value;
+            const selectedClass = document.getElementById('class-select').value;
+            document.getElementById('workspace-card').classList.remove('hidden');
+            document.getElementById('current-sheet-title').innerHTML = `<svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Marks Entry: ${selectedClass}`;
+            
+            const headerRow = document.getElementById('table-header-row');
+            headerRow.innerHTML = `<th class="p-4 w-16 bg-slate-100 rounded-tl-lg">Roll</th><th class="p-4 bg-slate-100">Student Name</th>`;
+            const subjects = subjectsMap[section];
+            subjects.forEach(sub => { headerRow.innerHTML += `<th class="p-3 border-l border-white/50 text-center font-bold bg-slate-100">${sub}</th>`; });
+            headerRow.innerHTML += `<th class="p-3 text-center bg-indigo-100/50 text-indigo-800 border-l border-white/50">Total</th><th class="p-3 text-center bg-indigo-100/50 text-indigo-800">Status</th><th class="p-3 text-center bg-slate-100 rounded-tr-lg">Action</th>`;
+
+            document.getElementById('student-table-body').innerHTML = "";
+            activeClassRows = [];
+            insertNewRowMarkup(1, "", subjects);
+            document.getElementById('summary-count').innerText = 1;
+        }
+
+        function insertNewRowMarkup(rollNo, nameValue, subjects) {
+            const tbody = document.getElementById('student-table-body');
+            const rowId = `row-${Date.now()}-${rollNo}`;
+            const tr = document.createElement('tr');
+            tr.id = rowId;
+            tr.className = "hover:bg-slate-50 transition-colors group";
+
+            let subjectsHTML = subjects.map(sub => `<td class="p-2 border-l border-slate-100 text-center"><input type="number" min="0" max="100" oninput="calculateRowCalculations('${rowId}')" class="subject-input w-16 px-2 py-1.5 text-center font-bold border border-slate-200 rounded-lg input-glow text-sm text-slate-700 bg-white" data-subject="${sub}" /></td>`).join('');
+
+            tr.innerHTML = `
+                <td class="p-4 text-center font-black text-slate-400 group-hover:text-indigo-500 transition-colors">${rollNo}</td>
+                <td class="p-2"><input type="text" value="${nameValue}" placeholder="Enter Full Name" class="student-name-input w-full px-3 py-2 border border-slate-200 rounded-lg input-glow text-sm font-bold text-slate-800 bg-white" /></td>
+                ${subjectsHTML}
+                <td class="p-3 font-black text-center bg-indigo-50/50 text-indigo-900 border-l border-slate-100" id="${rowId}-total">0</td>
+                <td class="p-3 text-center" id="${rowId}-status"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 tracking-wider">PASS</span></td>
+                <td class="p-3 text-center"><button class="text-slate-300 hover:text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg transition-all" onclick="deleteRow('${rowId}')"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></td>
+            `;
+            tbody.appendChild(tr);
+            activeClassRows.push(rowId);
+        }
+
+        function addStudentRow() {
+            const section = document.getElementById('academic-section').value;
+            insertNewRowMarkup(activeClassRows.length + 1, "", subjectsMap[section]);
+            document.getElementById('summary-count').innerText = activeClassRows.length;
+        }
+
+        function deleteRow(rowId) {
+            document.getElementById(rowId).remove();
+            activeClassRows = activeClassRows.filter(id => id !== rowId);
+            realignRollNumbers();
+        }
+
+        function realignRollNumbers() {
+            const rows = document.getElementById('student-table-body').children;
+            for (let i = 0; i < rows.length; i++) rows[i].children[0].innerText = i + 1;
+            document.getElementById('summary-count').innerText = rows.length;
+        }
+
+        function calculateRowCalculations(rowId) {
+            const row = document.getElementById(rowId);
+            const inputs = row.querySelectorAll('.subject-input');
+            let grandTotal = 0, failCount = 0;
+            inputs.forEach(input => {
+                let val = parseInt(input.value) || 0;
+                if(val > 100) { val = 100; input.value = 100; }
+                if(val < 0) { val = 0; input.value = 0; }
+                grandTotal += val;
+                if(val < 40) failCount++;
+            });
+            row.querySelector(`[id$="-total"]`).innerText = grandTotal;
+            const statusCell = row.querySelector(`[id$="-status"]`);
+            if (failCount >= 3) statusCell.innerHTML = `<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-rose-100 text-rose-800 tracking-wider">FAIL</span>`;
+            else if (failCount > 0) statusCell.innerHTML = `<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-amber-100 text-amber-800 tracking-wider">CONSIDER</span>`;
+            else statusCell.innerHTML = `<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 tracking-wider">PASS</span>`;
+        }
+
+        // Calculates Marks and stores them in Pending Cache, instructs teacher to go to Publish Tab.
+        function calculateAndSendToPublish(event) {
+            const selectedClass = document.getElementById('class-select').value;
+            let tempBatch = [];
+            
+            for (let i = 0; i < activeClassRows.length; i++) {
+                let row = document.getElementById(activeClassRows[i]);
+                let name = row.querySelector('.student-name-input').value.trim();
+                let roll = row.children[0].innerText;
+                if (!name) return alert(`Row ${roll} missing student name.`);
+                
+                let subjectsScores = {};
+                row.querySelectorAll('.subject-input').forEach(inp => subjectsScores[inp.getAttribute('data-subject')] = parseInt(inp.value) || 0);
+                
+                let total = parseInt(row.querySelector(`[id$="-total"]`).innerText);
+                let status = row.querySelector(`[id$="-status"]`).innerText;
+                let pct = (total / (Object.keys(subjectsScores).length * 100) * 100).toFixed(1) + "%";
+                tempBatch.push({ className: selectedClass, rollNo: roll, studentName: name, scores: subjectsScores, total: total, percentage: pct, status: status });
+            }
+
+            tempBatch.sort((a, b) => b.total - a.total);
+            tempBatch.forEach((s, idx) => s.rank = idx + 1);
+            tempBatch.sort((a, b) => parseInt(a.rollNo) - parseInt(b.rollNo));
+
+            const btn = event.target;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...`;
+            
+            setTimeout(() => {
+                // Ensure data is cached pending publish without overwriting the fetched DB
+                pendingPublishCache = pendingPublishCache.filter(s => s.className !== selectedClass).concat(tempBatch);
+                triggerUINotification('success', 'Marks calculated & mapped! Go to the "Publish Results" tab to select students and upload to Google Sheets Database.');
+                btn.innerHTML = origHtml;
+            }, 600);
+        }
+
+        // Rendering the Publish Tab Table Checkboxes from COMBINED data (DB + Pending)
+        function renderPublishList() {
+            const className = document.getElementById('publish-class-filter').value;
+            const container = document.getElementById('publish-table-container');
+            const tbody = document.getElementById('publish-list-body');
+            
+            if (!className) return container.classList.add('hidden');
+            
+            const data = getCombinedData().filter(d => d.className === className);
+            data.sort((a, b) => parseInt(a.rollNo) - parseInt(b.rollNo));
+            
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-bold tracking-widest uppercase">No calculated data found. Go to 'Marks Entry' to calculate first.</td></tr>`;
+                document.getElementById('selectAllPublish').checked = false;
+            } else {
+                tbody.innerHTML = "";
+                data.forEach(item => {
+                    let badge = item.status.includes('PASS') ? 'bg-emerald-100 text-emerald-800' : (item.status.includes('FAIL') ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800');
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4 text-center">
+                                <input type="checkbox" class="publish-checkbox w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer" value="${item.rollNo}" checked>
+                            </td>
+                            <td class="p-4 font-bold text-slate-500">${item.rollNo}</td>
+                            <td class="p-4 font-bold text-slate-800">${item.studentName}</td>
+                            <td class="p-4 font-black text-indigo-600">#${item.rank}</td>
+                            <td class="p-4 font-black text-slate-700">${item.total}</td>
+                            <td class="p-4"><span class="px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase ${badge}">${item.status}</span></td>
+                        </tr>
+                    `;
+                });
+                document.getElementById('selectAllPublish').checked = true;
+            }
+            container.classList.remove('hidden');
+        }
+
+        function toggleAllPublish(source) {
+            const checkboxes = document.querySelectorAll('.publish-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+
+        // Submits ONLY selected students to the database securely via fetch to Apps Script
+        async function publishSelectedResults() {
+            const className = document.getElementById('publish-class-filter').value;
+            if(!className) return triggerUINotification('error', "Select a class to publish.");
+            
+            const checkboxes = document.querySelectorAll('.publish-checkbox:checked');
+            if(checkboxes.length === 0) return triggerUINotification('error', "Select at least one student to publish to database.");
+            
+            const selectedRolls = Array.from(checkboxes).map(cb => cb.value.toString());
+            const payloadBatch = getCombinedData().filter(d => d.className === className && selectedRolls.includes(d.rollNo.toString()));
+            
+            let section = "upper_primary"; 
+            for (const [key, classes] of Object.entries(classOptions)) {
+                if (classes.includes(className)) { section = key; break; }
+            }
+
+            const btn = document.querySelector('#publish-table-container button');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Publishing to Database...`;
+
+            if(API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                setTimeout(() => {
+                    triggerUINotification('success', `Live Portal Activated for ${selectedRolls.length} students in ${className}. (Local Mode Only)`);
+                    btn.innerHTML = originalHtml;
+                }, 800);
+                return;
+            }
+            
+            try {
+                // We use standard fetch with POST to send data directly to Apps Script endpoint
+                const resp = await fetch(API_URL + "?action=saveMarks&section=" + section, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payloadBatch)
+                });
+                
+                const result = await resp.json();
+                
+                if(result.status === 'success') {
+                    triggerUINotification('success', `Successfully Published & Sorted ${selectedRolls.length} students into the Google Sheets Database.`);
+                    pendingPublishCache = pendingPublishCache.filter(d => d.className !== className); // Clear pending cache
+                    fetchAndRenderRecords(); // Reload from live database
+                } else {
+                    triggerUINotification('error', 'Error from database: ' + result.message);
+                }
+            } catch(e) {
+                triggerUINotification('error', 'Publish transaction failed due to network connection.');
+            }
+            btn.innerHTML = originalHtml;
+        }
+
+        async function fetchAndRenderRecords() {
+            if(!API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                try {
+                    const resp = await fetch(API_URL + "?action=getAllRecords");
+                    const res = await resp.json();
+                    if(res.status === 'success') localDatabaseCache = res.data;
+                } catch(e) {}
+            }
+            renderRecordsTable();
+        }
+
+        function renderRecordsTable() {
+            const filterClass = document.getElementById('record-class-filter').value;
+            const tbody = document.getElementById('records-table-body');
+            tbody.innerHTML = "";
+
+            let data = filterClass ? getCombinedData().filter(d => d.className === filterClass) : getCombinedData();
+            
+            if(currentRecordFilter === 'rank') data.sort((a, b) => a.rank - b.rank);
+            else if (currentRecordFilter === 'fail') data = data.filter(d => d.status.includes('FAIL'));
+            else if (currentRecordFilter === 'pass') data = data.filter(d => d.status.includes('PASS'));
+
+            if(data.length === 0) return tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400 font-bold tracking-widest uppercase">No records found.</td></tr>`;
+
+            data.forEach(item => {
+                let badge = item.status.includes('PASS') ? 'bg-emerald-100 text-emerald-800' : (item.status.includes('FAIL') ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800');
+                let rankTrophy = item.rank === 1 ? '🏆 ' : (item.rank === 2 ? '🥈 ' : (item.rank === 3 ? '🥉 ' : ''));
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-black text-indigo-600">${rankTrophy}#${item.rank}</td>
+                        <td class="p-4 font-bold text-slate-500">${item.rollNo}</td>
+                        <td class="p-4 font-bold text-slate-800">${item.studentName}</td>
+                        <td class="p-4 font-black text-slate-700">${item.total}</td>
+                        <td class="p-4"><span class="px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase ${badge}">${item.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
