@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Club Registration</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      margin: 0;
+      padding: 40px 20px 80px 20px; 
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Top Left Exit Button */
+    .top-exit-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #c53030;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+    .top-exit-btn:hover {
+      background-color: #9b2c2c;
+    }
+
+    /* Animated, Blurred Background Image */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -5%;
+      left: -5%;
+      width: 110%;
+      height: 110%;
+      background-image: url('145545.jfif'); 
+      background-size: cover;
+      background-position: center;
+      filter: blur(6px); 
+      z-index: -1;
+      animation: ambientZoom 20s infinite alternate ease-in-out; 
+    }
+
+    @keyframes ambientZoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
+    }
+
+    /* Semi-transparent Glass Container */
+    .document-container {
+      background: rgba(255, 255, 255, 0.90); 
+      backdrop-filter: blur(4px); 
+      width: 100%;
+      max-width: 700px;
+      padding: 50px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+      border-top: 8px solid #1a365d; 
+      border-radius: 4px;
+      height: fit-content;
+      margin-top: 20px; 
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #1a365d;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #1a365d;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .header h2 {
+      margin: 5px 0 0 0;
+      color: #4a5568;
+      font-size: 16px;
+      font-weight: normal;
+    }
+    .form-instructions {
+      font-style: italic;
+      color: #4a5568;
+      margin-bottom: 25px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      display: none; 
+    }
+    .form-group.active {
+      display: block;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      box-sizing: border-box;
+      background-color: #f8fafc;
+    }
+    select:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #1a365d;
+      background-color: white;
+    }
+
+    /* Button Group Styles */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      display: none; 
+    }
+    .submit-btn {
+      flex: 2;
+      padding: 15px;
+      background-color: #1a365d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .submit-btn:hover {
+      background-color: #2a4365;
+    }
+    .submit-btn:disabled {
+      background-color: #a0aec0;
+      cursor: not-allowed;
+    }
+    .exit-btn {
+      flex: 1;
+      padding: 15px;
+      background-color: #c53030;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .exit-btn:hover {
+      background-color: #9b2c2c;
+    }
+
+    /* Status Message Boxes */
+    #status-message {
+      text-align: center;
+      margin-top: 25px;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+      padding: 25px;
+      display: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .status-icon {
+      font-size: 45px;
+      display: block;
+      margin-bottom: 15px;
+    }
+    .success { 
+      color: #22543d; 
+      background-color: #f0fff4; 
+      border: 3px solid #48bb78; 
+    }
+    .error { 
+      color: #742a2a; 
+      background-color: #fff5f5; 
+      border: 3px solid #f56565; 
+    }
+
+    /* Official Copyright Footer */
+    .school-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(26, 54, 93, 0.85); 
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<a href="staff.html" class="top-exit-btn">⬅ Exit to Staff</a>
+
+<div class="document-container">
+  <div class="header">
+    <h1>Good Shepherd Higher Secondary School</h1>
+    <h2>Official Co-Curricular Club & Committee Registration Form</h2>
+  </div>
+
+  <p class="form-instructions" id="instructions">
+    Instructions: Please select your specific club/committee below. Complete all required fields sequentially to officially register the leadership team for the academic year.<br><br>
+    <em>Note: Ensure you have the correct names for the Teacher Coordinator, Captain, and Vice Captain before submitting for your respective club.</em>
+  </p>
+
+  <form id="registrationForm">
+    
+    <div class="form-group active" id="step-club">
+      <label for="clubType">1. Select Club/Committee Designation:</label>
+      <select id="clubType" name="clubType" required onchange="onClubChange()">
+        <option value="" disabled selected>-- Select Designation --</option>
+        <option value="Art Club">Art Club</option>
+        <option value="Music Club">Music Club</option>
+        <option value="Eco Club">Eco Club</option>
+        <option value="Decoration Club">Decoration Club</option>
+        <option value="Media Club">Media Club</option>
+        <option value="Chess Club">Chess Club</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="step-coordinator">
+      <label id="label-coordinator" for="coordinatorName">2. Teacher Coordinator Name:</label>
+      <input type="text" id="coordinatorName" name="coordinatorName" required oninput="checkFields()">
+    </div>
+
+    <div class="form-group" id="step-captain">
+      <label id="label-captain" for="captainName">3. Captain Name:</label>
+      <input type="text" id="captainName" name="captainName" required oninput="checkFields()">
+    </div>
+
+    <div class="form-group" id="step-vicecaptain">
+      <label id="label-vicecaptain" for="viceCaptainName">4. Vice Captain Name:</label>
+      <input type="text" id="viceCaptainName" name="viceCaptainName" required oninput="checkFields()">
+    </div>
+
+    <div class="button-group" id="btnGroup">
+      <button type="submit" id="submitBtn" class="submit-btn">Submit Official Record</button>
+      <button type="button" class="exit-btn" onclick="exitForm()">Reset</button>
+    </div>
+  </form>
+  
+  <div id="status-message"></div>
+</div>
+
+<div class="school-footer">
+  © 2026 GOOD SHEPHERD HIGHER SECONDARY SCHOOL - All Rights Reserved.
+</div>
+
+<script>
+  // *** IMPORTANT: REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL ***
+  const API_URL = "https://script.google.com/macros/s/AKfycby2Yoyobx4n9CFVA0C2JNBkfRU5ul5mVrCX7d1hlPrYcmYdNQtFdYkbuCa4QfEfTnM/exec";
+
+  function onClubChange() {
+    const club = document.getElementById("clubType").value;
+    if (club) {
+      document.getElementById("label-coordinator").innerText = `2. ${club} Teacher Coordinator:`;
+      document.getElementById("label-captain").innerText = `3. ${club} Captain:`;
+      document.getElementById("label-vicecaptain").innerText = `4. ${club} Vice Captain:`;
+      
+      document.getElementById("step-coordinator").classList.add("active");
+    }
+  }
+
+  function checkFields() {
+    const coord = document.getElementById("coordinatorName").value.trim();
+    const cap = document.getElementById("captainName").value.trim();
+    const vice = document.getElementById("viceCaptainName").value.trim();
+
+    if (coord.length > 0) document.getElementById("step-captain").classList.add("active");
+    if (cap.length > 0) document.getElementById("step-vicecaptain").classList.add("active");
+    
+    if (coord.length > 0 && cap.length > 0 && vice.length > 0) {
+      document.getElementById("btnGroup").style.display = "flex";
+    } else {
+      document.getElementById("btnGroup").style.display = "none";
+    }
+  }
+
+  function exitForm() {
+    document.getElementById("registrationForm").reset();
+    document.getElementById("step-coordinator").classList.remove("active");
+    document.getElementById("step-captain").classList.remove("active");
+    document.getElementById("step-vicecaptain").classList.remove("active");
+    document.getElementById("btnGroup").style.display = "none";
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById("registrationForm").addEventListener("submit", function(e) {
+    e.preventDefault(); 
+    
+    const btn = document.getElementById("submitBtn");
+    const statusMsg = document.getElementById("status-message");
+    
+    btn.disabled = true;
+    btn.innerText = "Processing Record...";
+    
+    const formData = new FormData(this);
+
+    fetch(API_URL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === "success") {
+        this.style.display = "none";
+        document.getElementById("instructions").style.display = "none";
+        
+        statusMsg.innerHTML = `
+          <span class="status-icon">✅</span>
+          <strong>Thank you for your interest!</strong><br>
+          Your official record has been submitted successfully.
+        `;
+        statusMsg.className = "success";
+        statusMsg.style.display = "block";
+      } else {
+        throw new Error(data.message);
+      }
+    })
+    .catch(error => {
+      btn.disabled = false;
+      btn.innerText = "Submit Official Record";
+      
+      statusMsg.innerHTML = `
+        <span class="status-icon">❌</span>
+        <strong>Submission Error:</strong><br>
+        Something went wrong or data was mistaken. Please check your connection and try again. 
+        <br><br><span style="font-size:14px;">(Error detail: ${error.message})</span>
+      `;
+      statusMsg.className = "error";
+      statusMsg.style.display = "block";
+    });
+  });
+</script>
+
+</body>
+</html>
